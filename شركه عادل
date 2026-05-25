@@ -1,0 +1,276 @@
+import { useState } from "react";
+
+export default function AdelLogisticsBookingPortal() {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    department: "",
+    date: "",
+    time: "",
+    details: "",
+  });
+
+  const departments = [
+    {
+      name: "رئيس مجلس الإدارة",
+      phone: "0502000577",
+      desc: "الاجتماعات والشراكات الرسمية",
+      icon: "🤵",
+    },
+    {
+      name: "مدير التشغيل",
+      phone: "0535553613",
+      desc: "متابعة التشغيل والتوصيل",
+      icon: "🚚",
+    },
+    {
+      name: "مدير العمليات",
+      phone: "0531521700",
+      desc: "متابعة العمليات والخدمات",
+      icon: "📦",
+    },
+    {
+      name: "مدير الحسابات",
+      phone: "سيضاف لاحقاً",
+      desc: "الفواتير والمدفوعات",
+      icon: "💰",
+    },
+  ];
+
+  const languages = ["العربية", "English", "বাংলা", "اردو", "हिन्दी"];
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const selectedDepartment = departments.find(
+      (dept) => dept.name === formData.department
+    );
+
+    if (!selectedDepartment) {
+      alert("اختر القسم");
+      return;
+    }
+
+    const message = `📌 طلب حجز جديد
+
+👤 الاسم: ${formData.name}
+📱 الجوال: ${formData.phone}
+🏢 القسم: ${formData.department}
+📅 التاريخ: ${formData.date}
+⏰ الوقت: ${formData.time}
+📝 التفاصيل: ${formData.details}`;
+
+    const whatsappUrl = `https://wa.me/966${selectedDepartment.phone.replace(
+      /^0/,
+      ""
+    )}?text=${encodeURIComponent(message)}`;
+
+    window.location.href = whatsappUrl;
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-black" dir="rtl">
+      {/* Header */}
+      <div className="bg-black text-white p-5 flex justify-between items-center flex-wrap gap-4">
+        <div className="flex gap-2 flex-wrap">
+          {languages.map((lang, index) => (
+            <button
+              key={index}
+              className="bg-gray-700 px-4 py-2 rounded-xl hover:bg-yellow-400 hover:text-black"
+            >
+              {lang}
+            </button>
+          ))}
+        </div>
+
+        <h1 className="text-3xl font-black">
+          عادل للخدمات اللوجستية
+        </h1>
+      </div>
+
+      {/* Hero */}
+      <div className="grid lg:grid-cols-2 gap-10 items-center px-6 py-16 max-w-7xl mx-auto">
+        <div>
+          <h2 className="text-5xl font-black leading-tight mb-6">
+            توصيل سريع واحترافي
+          </h2>
+
+          <p className="text-xl text-gray-600 leading-9 mb-8">
+            منصة حجز احترافية لشركة عادل للخدمات اللوجستية مع
+            تحويل مباشر للواتساب بعد الحجز.
+          </p>
+
+          <a
+            href="#booking"
+            className="bg-yellow-400 hover:bg-yellow-500 px-8 py-4 rounded-2xl text-black font-black text-lg"
+          >
+            احجز الآن
+          </a>
+        </div>
+
+        <div className="relative">
+          <img
+            src="https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=1200&auto=format&fit=crop"
+            alt="سيارة توصيل"
+            className="rounded-3xl shadow-2xl"
+          />
+
+          {/* شعار الشركة على السيارة */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-6 py-3 rounded-2xl shadow-2xl text-2xl font-black">
+            عادل
+          </div>
+        </div>
+      </div>
+
+      {/* المسؤولين */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        <h2 className="text-4xl font-black text-center mb-14">
+          تواصل مباشر
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {departments.map((dept, index) => (
+            <div
+              key={index}
+              className="bg-white border rounded-3xl p-6 shadow-lg"
+            >
+              <div className="text-5xl mb-4">{dept.icon}</div>
+
+              <h3 className="text-2xl font-bold mb-3">
+                {dept.name}
+              </h3>
+
+              <p className="text-gray-600 mb-5">
+                {dept.desc}
+              </p>
+
+              <div className="bg-gray-100 p-3 rounded-2xl text-center font-bold mb-5">
+                {dept.phone}
+              </div>
+
+              {dept.phone !== "سيضاف لاحقاً" && (
+                <a
+                  href={`https://wa.me/966${dept.phone.replace(/^0/, "")}`}
+                  className="block text-center bg-green-500 hover:bg-green-600 text-white py-3 rounded-2xl font-bold"
+                >
+                  واتساب مباشر
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* نموذج الحجز */}
+      <div
+        id="booking"
+        className="bg-gray-100 py-16 px-6"
+      >
+        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-8">
+          <h2 className="text-4xl font-black text-center mb-10">
+            نموذج الحجز
+          </h2>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-5">
+              <input
+                type="text"
+                name="name"
+                placeholder="الاسم الكامل"
+                value={formData.name}
+                onChange={handleChange}
+                className="border p-4 rounded-2xl"
+              />
+
+              <input
+                type="tel"
+                name="phone"
+                placeholder="رقم الجوال"
+                value={formData.phone}
+                onChange={handleChange}
+                className="border p-4 rounded-2xl"
+              />
+
+              <select
+                name="department"
+                value={formData.department}
+                onChange={handleChange}
+                className="border p-4 rounded-2xl"
+              >
+                <option value="">
+                  اختر القسم
+                </option>
+
+                <option>
+                  رئيس مجلس الإدارة
+                </option>
+
+                <option>
+                  مدير التشغيل
+                </option>
+
+                <option>
+                  مدير العمليات
+                </option>
+
+                <option>
+                  مدير الحسابات
+                </option>
+              </select>
+
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="border p-4 rounded-2xl"
+              />
+            </div>
+
+            <input
+              type="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              className="w-full border p-4 rounded-2xl"
+            />
+
+            <textarea
+              rows="5"
+              name="details"
+              placeholder="تفاصيل الحجز"
+              value={formData.details}
+              onChange={handleChange}
+              className="w-full border p-4 rounded-2xl"
+            />
+
+            <button
+              type="submit"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 py-4 rounded-2xl text-black text-xl font-black"
+            >
+              تأكيد الحجز
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-black text-white text-center py-10">
+        <h3 className="text-3xl font-black mb-4">
+          عادل للخدمات اللوجستية
+        </h3>
+
+        <p className="text-gray-400">
+          جميع الحقوق محفوظة © 2026
+        </p>
+      </footer>
+    </div>
+  );
+}
